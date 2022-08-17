@@ -13,20 +13,26 @@ import java.util.List;
 @Slf4j
 public class TestMybatis {
 
-
+    SqlSessionFactory sqlSessionFactory = null;
 
     @Before
     public void before() throws IOException {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactoryBuilder sqlSessionFactoryBuilder = new SqlSessionFactoryBuilder();
-        sqlSessionFactory = sqlSessionFactoryBuilder.build(inputStream);
+       sqlSessionFactory = sqlSessionFactoryBuilder.build(inputStream);
     }
     @Test
-    public void testMapper() throws IOException {
-
+    public void testSession() throws IOException {
         try (SqlSession session = sqlSessionFactory.openSession()) {
-           session.getMapper();
+            List<Object> objects = session.selectList("user.select");
+            log.debug("result is[{}]",objects);
+        }
+    }
+
+    @Test
+    public void testMapper() throws IOException {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
         }
     }
 }

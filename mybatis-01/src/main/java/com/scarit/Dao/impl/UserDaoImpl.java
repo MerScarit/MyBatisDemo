@@ -24,8 +24,14 @@ public class UserDaoImpl implements UserDao  {
         SqlSessionFactoryBuilder sqlSessionFactoryBuilder = new SqlSessionFactoryBuilder();
         SqlSessionFactory sqlSessionFactory = sqlSessionFactoryBuilder.build(inputStream);
         try (SqlSession session = sqlSessionFactory.openSession()) {
-            session.selectList(UserDao.class.getName()+"."+"selectAll()");
+            List<Object> objects = session.selectList(UserDao.class.getName() + "." + "selectAll");
+            System.out.println(objects);
         }
         return null;
+    }
+
+    public static void main(String[] args) {
+        UserDao userDao = new UserDaoImpl();
+        userDao.selectAll();
     }
 }
