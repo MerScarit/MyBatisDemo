@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scarit.mapper.DeptMapper">
+
+    <resultMap id="deptMap" type="dept">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <collection property="employees" javaType="list" ofType="employee"
+                    column="id" select="com.scarit.mapper.EmployeeMapper.selectByDid">
+            <id column="id" property="id"/>
+            <result column="name" property="name"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="deptMap2" type="dept">
+        <id column="did" property="id"/>
+        <result column="dname" property="name"/>
+        <collection property="employees" javaType="list" ofType="employee">
+            <id column="eid" property="id"/>
+            <result column="ename" property="name"/>
+        </collection>
+    </resultMap>
+
+    <sql id="sql">
+        `id`,`name`
+    </sql>
+
+    <select id="select" resultMap="deptMap">
+        select
+        <include refid="sql"/>
+        from dept where id = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="deptMap">
+        select
+        <include refid="sql"/>
+        from dept
+    </select>
+
+    <select id="select2" resultMap="deptMap2">
+        select d.id did,d.name dname,e.id eid,e.name ename
+        from dept d
+            left join employee e on d.id = e.did
+    </select>
+
+</mapper>

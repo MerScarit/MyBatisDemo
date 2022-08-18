@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scarit.mapper.UserDao">
+    <resultMap id="UserMap" type="com.scarit.entity.User">
+        <!-- id为主键 -->
+        <id column="id" property="id"/>
+        <!-- column是数据库表的列名 , property是对应实体类的属性名 -->
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+    </resultMap>
+    <select id="selectAll" resultMap="UserMap">
+        select * from user
+    </select>
+    
+    <select id="findUser" resultMap="UserMap">
+        select * from user
+        <where>
+            <if test="id != null ">
+                AND id = #{id}
+            </if>
+            <if test="username != null and username != ''" >
+                AND username = #{username}
+            </if>
+            <if test="password != null and password != ''" >
+                AND password = #{password}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectOne" resultMap="UserMap">
+        select * from user where id=#{id}
+    </select>
+    
+    <insert id="insert">
+        insert into user (id,username,password) values (#{id},#{username},#{password})
+    </insert>
+
+    <update id="update">
+        update user
+        <set>
+            <if test="username != null and username != ''" >
+                 username = #{username},
+            </if>
+            <if test="password != null and password != ''" >
+                 password = #{password},
+            </if>
+        </set>
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+        </where>
+    </update>
+
+    <delete id="delete">
+        delete from user where id = #{id}
+    </delete>
+
+    <delete id="deleteByIds">
+        delete from user where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+         #{id}
+        </foreach>
+        </delete>
+
+    <insert id="batchInsert" parameterType="list">
+        insert into user(id,username,password)
+        <foreach collection="users" item="user" separator=",">
+            (#{users.id},#{users.username},#{users.password})
+        </foreach>
+    </insert>
+</mapper>

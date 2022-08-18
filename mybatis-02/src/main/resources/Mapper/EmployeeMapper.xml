@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scarit.mapper.EmployeeMapper">
+
+    <resultMap id="employeeMapper" type="employee">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <association property="dept" column="did" javaType="dept"
+                     select="com.scarit.mapper.DeptMapper.select">
+            <id column="id" property="id"></id>
+            <result column="name" property="name"></result>
+        </association>
+    </resultMap>
+
+    <resultMap id="employeeMapper2" type="employee">
+        <id column="eid" property="id" />
+        <result column="ename" property="name"/>
+        <association property="dept" javaType="dept" >
+            <id column="did" property="id"/>
+            <result column="dname" property="name"/>
+        </association>
+    </resultMap>
+
+    <sql id="sql">
+        `id`,`name`,`did`
+    </sql>
+
+    <select id="select" resultMap="employeeMapper">
+        select <include refid="sql" />
+        from employee
+    </select>
+
+    <select id="selectByDid" resultMap="employeeMapper2">
+        select id eid,name ename from employee where did  = #{did}
+    </select>
+</mapper>
